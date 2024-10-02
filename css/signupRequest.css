@@ -1,0 +1,31 @@
+
+body {
+    color: #f8f9fa; /* Light color for text */
+    background-color: #212529; /* Dark background for the entire page */
+  }
+  .page_title {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+.table-responsive {
+    margin-top: 2%;
+    width: 80%;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+  }
+  .table{
+    width: 100%;
+  }
+  .table th, .table td {
+    padding: 10px;
+    text-align: center;
+  }
+  .table th {
+    background-color: #343a40;
+    color: #f8f9fa;
+  }

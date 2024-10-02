@@ -3,6 +3,7 @@
     color: #f8f9fa; /* Light color for text */
     background-color: #212529; /* Dark background for the entire page */
   }
+
   .welcome-message {
     height: 80vh;
     display: flex;
