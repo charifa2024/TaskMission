@@ -35,29 +35,30 @@
       </div>
     </nav>
     <div class="container page_title">
-  <h1 class="text-center mb-4">Gestion des demandes d'inscriptions</h1>
+  <h1 class="text-center mb-4">Demande d'Inscription</h1>
   </div>
-  <div class="container table-responsive">
-  <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Email</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td scope="row">email@gmail.com</td>
-      <td style="display:flex;justify-content:center;align-items:center;">
-       <a href="signupRequestView.php"><button type="button" class="btn btn-info me-1">Info</button></a>
-       <form action="#" method="post"><button type="button" class="btn btn-success me-1">Accepter</button>
-       </form>
-       <form action="#" method="post"><button type="button" class="btn btn-danger">Refuser</button>
-       </form>
-      </td>
-    </tr>
-  </tbody>
-</table>
+</div>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-dark text-white">
+          <h3 class="mb-0">Informations de la Demande</h3>
+        </div>
+        <div class="card-body">
+          <dl class="row">
+            <dt class="col-sm-4">Adresse Email :</dt>
+            <dd class="col-sm-8">email@gmail.com</dd>
+            <dt class="col-sm-4">Nom Complet :</dt>
+            <dd class="col-sm-8">charifa fax</dd>
+          </dl>
+          <div class="text-center mt-4">
+            <a href="signupRequest.php" class="btn btn-dark">Retourner au Tableau</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

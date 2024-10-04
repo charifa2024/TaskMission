@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gestion des demandes d'inscriptions</title>
+    <title>Gestion des Opérations</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/signupRequest.css">
   </head>
@@ -19,42 +19,38 @@
               <a class="nav-link" href="index.php">Tableau de bord</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="tasks.php">tâches</a>
+              <a class="nav-link" href="#">tâches</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="missions.php">Missions</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="signupRequest.php">Demandes d'Inscription</a>
+              <a class="nav-link " href="signupRequest.php">Demandes d'Inscription</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="operation.php">Opérations Éffectuées</a>
+              <a class="nav-link active" aria-current="page" href="operation.php">Opérations Éffectuées</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
     <div class="container page_title">
-  <h1 class="text-center mb-4">Gestion des demandes d'inscriptions</h1>
+  <h1 class="text-center mb-4">Gestion des Opérations effectuées par les utilisateurs</h1>
   </div>
   <div class="container table-responsive">
   <table class="table">
   <thead>
     <tr>
+      <th scope="col">Date</th>
       <th scope="col">Email</th>
-      <th scope="col">Actions</th>
+      <th scope="col">Opération</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td scope="row">2023-06-01</td>
       <td scope="row">email@gmail.com</td>
-      <td style="display:flex;justify-content:center;align-items:center;">
-       <a href="signupRequestView.php"><button type="button" class="btn btn-info me-1">Info</button></a>
-       <form action="#" method="post"><button type="button" class="btn btn-success me-1">Accepter</button>
-       </form>
-       <form action="#" method="post"><button type="button" class="btn btn-danger">Refuser</button>
-       </form>
-      </td>
+      <td scope="row">Création de tâche</td>
     </tr>
   </tbody>
 </table>

@@ -29,3 +29,6 @@ body {
     background-color: #343a40;
     color: #f8f9fa;
   }
+  .card-text{
+    font-size: 2.3em;
+  }
