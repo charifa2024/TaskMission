@@ -49,8 +49,8 @@
     <tr>
       <td scope="row">mission 1</td>
       <td style="display:flex;justify-content:center;align-items:center;">
-       <a href="#"><button type="button" class="btn btn-info me-1">Info</button></a>
-       <a href="#"><button type="button" class="btn btn-warning me-1">Ajouter une tâche</button></a>
+       <a href="missionView.php"><button type="button" class="btn btn-info me-1">Info</button></a>
+       <a href="missionModify.php"><button type="button" class="btn btn-warning me-1">Modifier</button></a>
        <button type="button" class="btn btn-success me-1" onclick="showShareForm()">Partager</button>
        </td>
     </tr>
@@ -80,7 +80,33 @@
 </table>
 </div>
 <div style="display:flex;justify-content:center;align-items:center;">
-<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='#'" >Ajouter une mission</button>
+<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='addMission.php'" >Ajouter une mission</button>
+</div>
+
+<div class="container page_title">
+  <h1 class="text-center mb-4">Les Missions partagées avec vous</h1>
+  </div>
+  <div class="container table-responsive" style="margin-bottom: 5rem;">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Titre</th>
+      <th scope="col">Expiditeur</th>
+      <th scope="col">Actions</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td scope="row">mission 1</td>
+      <td>user1</td>
+      <td style="display:flex;justify-content:center;align-items:center;">
+       <a href="missionView.php"><button type="button" class="btn btn-info me-1">Info</button></a>
+       <a href="missionModify.php"><button type="button" class="btn btn-warning me-1">Modifier</button></a>
+       </td>
+    </tr>
+  </tbody>
+</table>
 </div>
 <script>function showShareForm() {
   document.querySelector('.share-task-row').style.display = 'table-row';

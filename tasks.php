@@ -89,6 +89,35 @@
 <div style="display:flex;justify-content:center;align-items:center;">
 <button type="button" class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='addTask.php'" >Ajouter une tâche</button>
 </div>
+
+<div class="container page_title">
+  <h1 class="text-center mb-4">Les Tâches Partagéés avec vous</h1>
+  </div>
+  <div class="container table-responsive" style="margin-bottom: 5rem;">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Titre</th>
+      <th scope="col">Statut</th>
+      <th scope="col">Priorité</th>
+      <th scope="col">Expideteur</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td scope="row">Tâche 1</td>
+      <td scope="row">en cours</td>
+      <td scope="row">primaire</td>
+      <td scope="row">Utilisateur 1</td>
+      <td style="display:flex;justify-content:center;align-items:center;">
+       <a href="taskView.php"><button type="button" class="btn btn-info me-1">Info</button></a>
+       <a href="modifyTask.php"><button type="button" class="btn btn-warning me-1">Modifier</button></a>
+       </td>
+    </tr>
+  </tbody>
+</table>
+</div>
 <script>function showShareForm() {
   document.querySelector('.share-task-row').style.display = 'table-row';
 }

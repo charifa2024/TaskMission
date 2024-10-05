@@ -19,7 +19,7 @@
               <a class="nav-link" href="index.php">Tableau de bord</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">tâches</a>
+              <a class="nav-link" href="tasks.php">tâches</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="missions.php">Missions</a>
@@ -37,7 +37,7 @@
     <div class="container page_title">
   <h1 class="text-center mb-4">Gestion des Opérations effectuées par les utilisateurs</h1>
   </div>
-  <div class="container table-responsive">
+  <div class="container table-responsive"style="margin-bottom: 5rem;">
   <table class="table">
   <thead>
     <tr>
