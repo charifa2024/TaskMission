@@ -1,3 +1,27 @@
+<?php
+session_start();
+
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    // Rediriger vers la page de login si l'utilisateur n'est pas connecté
+    header('Location: loginPage.php');
+    exit();
+}
+
+// Vérifier le rôle de l'utilisateur
+if ($_SESSION['role'] !== 'admin') {
+    // Rediriger si le rôle n'est pas 'user'
+    header('Location: index.php'); // Page d'erreur ou redirection appropriée
+    exit();
+}
+?>
+<?php
+include 'databaseConnect.php';
+$sql = "SELECT * FROM users WHERE role = 'user' AND state = 'desactive'";
+$result = $connection->query($sql);
+$signupRequests = $result->fetch_all(MYSQLI_ASSOC);
+$connection->close();
+?>
 <!doctype html>
 <html lang="fr">
   <head>
@@ -8,32 +32,7 @@
     <link rel="stylesheet" href="css/signupRequest.css">
   </head>
   <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">      <div class="container-fluid">
-  <a class="navbar-brand" href="index.php" style="font-size :2em;font-weight:bold;">TaskMission</a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="index.php">Tableau de bord</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="tasks.php">tâches</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="missions.php">Missions</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="signupRequest.php">Demandes d'Inscription</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="operation.php">Opérations Éffectuées</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+  <?php include 'navbar.php'; ?>
     <div class="container page_title">
   <h1 class="text-center mb-4">Gestion des demandes d'inscriptions</h1>
   </div>
@@ -46,16 +45,24 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td scope="row">email@gmail.com</td>
-      <td style="display:flex;justify-content:center;align-items:center;">
-       <a href="signupRequestView.php"><button type="button" class="btn btn-info me-1">Info</button></a>
-       <form action="#" method="post"><button type="button" class="btn btn-success me-1">Accepter</button>
-       </form>
-       <form action="#" method="post"><button type="button" class="btn btn-danger">Refuser</button>
-       </form>
-      </td>
-    </tr>
+    <?php
+    foreach ($signupRequests as $request) {
+      echo "<tr>";
+      echo "<td>" . $request['email'] . "</td>";
+      echo "<td>";
+      echo "<a href='signup_op/signupRequestView.php?email=" . $request['email'] . "' class='btn btn-info me-1'>Info</a>";
+      echo "<form action='signup_op/signupRequestAccept.php' method='post' style='display:inline;'>";
+      echo "<input type='hidden' name='email' value='" . $request['email'] . "'>";
+      echo "<button type='submit' class='btn btn-success me-1'>Accepter</button>";
+      echo "</form>";
+      echo "<form action='signup_op/signupRequestReject.php' method='post' style='display:inline;'>";
+      echo "<input type='hidden' name='email' value='" . $request['email'] . "'>";
+      echo "<button type='submit' class='btn btn-danger'>Refuser</button>";
+      echo "</form>";
+      echo "</td>";
+      echo "</tr>";
+    }
+    ?>
   </tbody>
 </table>
 </div>

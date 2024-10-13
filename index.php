@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="fr">
   <head>
@@ -8,33 +9,7 @@
     <link rel="stylesheet" href="css/index.css">
   </head>
   <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">      <div class="container-fluid">
-        <a class="navbar-brand" href="index.php" style="font-size :2em;font-weight:bold;">TaskMission</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="index.php">Tableau de bord</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="tasks.php">tâches</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="missions.php">Missions</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="signupRequest.php">Demandes d'Inscription</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="operation.php">Opérations Éffectuées</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
+<?php include 'navbar.php'; ?>
     <div class="container welcome-message">
   <h1 class="text-center mb-4">Bienvenue sur TaskMission</h1>
   <p class="text-center">Gérez efficacement vos tâches et missions entre utilisateurs</p>

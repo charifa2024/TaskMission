@@ -1,3 +1,29 @@
+<?php
+session_start();
+
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    // Rediriger vers la page de login si l'utilisateur n'est pas connecté
+    header('Location: loginPage.php');
+    exit();
+}
+
+// Vérifier le rôle de l'utilisateur
+if ($_SESSION['role'] !== 'admin') {
+    // Rediriger si le rôle n'est pas 'admin'
+    header('Location: index.php'); // Page d'erreur ou redirection appropriée
+    exit();
+}
+
+include 'databaseConnect.php'; // Connexion à la base de données
+
+// Requête pour récupérer toutes les opérations avec les e-mails des utilisateurs
+$sql = "SELECT operations.operation, operations.created_at, users.email 
+        FROM operations 
+        INNER JOIN users ON operations.user_id = users.id
+        ORDER BY operations.created_at DESC";
+$result = $connection->query($sql);
+?>
 <!doctype html>
 <html lang="fr">
   <head>
@@ -8,53 +34,37 @@
     <link rel="stylesheet" href="css/signupRequest.css">
   </head>
   <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">      <div class="container-fluid">
-  <a class="navbar-brand" href="index.php" style="font-size :2em;font-weight:bold;">TaskMission</a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="index.php">Tableau de bord</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="tasks.php">tâches</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="missions.php">Missions</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link " href="signupRequest.php">Demandes d'Inscription</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="operation.php">Opérations Éffectuées</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+  <?php include 'navbar.php'; ?>
     <div class="container page_title">
-  <h1 class="text-center mb-4">Gestion des Opérations effectuées par les utilisateurs</h1>
-  </div>
-  <div class="container table-responsive"style="margin-bottom: 5rem;">
-  <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Date</th>
-      <th scope="col">Email</th>
-      <th scope="col">Opération</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td scope="row">2023-06-01</td>
-      <td scope="row">email@gmail.com</td>
-      <td scope="row">Création de tâche</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+        <h1 class="text-center mb-4">Gestion des Opérations effectuées par les utilisateurs</h1>
+    </div>
+    <div class="container table-responsive" style="margin-bottom: 5rem;">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Opération</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Vérifier s'il y a des résultats et afficher les opérations
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row['created_at'] . "</td>";
+                        echo "<td>" . $row['email'] . "</td>";
+                        echo "<td>" . $row['operation'] . "</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='3' class='text-center'>Aucune opération trouvée</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
