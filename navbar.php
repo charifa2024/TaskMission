@@ -3,7 +3,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <?php
 session_start();
-
 ?>
 <style>
   .navbar-nav .nav-link.active {

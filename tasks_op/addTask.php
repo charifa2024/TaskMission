@@ -20,11 +20,23 @@ include '../databaseConnect.php';
 // Initialize variables
 $title = $description = $priority = $error = $success = "";
 
+// Generate a CSRF token if it doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// Check for POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Verify CSRF token
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die("Invalid CSRF token");
+    }
+
     $title = trim($_POST["title"]);
     $description = trim($_POST["description"]);
     $priority = $_POST["priority"];
 
+    // Validate inputs
     if (empty($title) || empty($description) || empty($priority)) {
         $error = "Veuillez remplir tous les champs";
     } else {
@@ -81,9 +93,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
   <form style="width:50%;" method="post">
+    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
     <div class="form-group">
       <label for="Title" style="margin: 10px 10px;">Titre</label>
-      <input type="text" class="form-control" placeholder="Entrer le titre" name="title"<?php echo htmlspecialchars($title); ?>>
+      <input type="text" class="form-control" placeholder="Entrer le titre" name="title" value="<?php echo htmlspecialchars($title); ?>">
     </div>
     <div class="form-group">
       <label for="description" style="margin: 10px 10px;">Description</label>

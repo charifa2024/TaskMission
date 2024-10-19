@@ -15,8 +15,29 @@ if ($_SESSION['role'] !== 'user') {
     exit();
 }
 
+// CSRF Token Generation
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 include '../databaseConnect.php';
-$id = $_GET['id'];
+
+// Valider l'ID de tâche
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+// Vérifier si la tâche appartient à l'utilisateur
+$stmt = $connection->prepare("SELECT user_id FROM tasks WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$task = $result->fetch_assoc();
+$stmt->close();
+
+// Si la tâche n'existe pas ou ne appartient pas à l'utilisateur, rediriger
+if (!$task || $task['user_id'] !== $_SESSION['user_id']) {
+    header('Location: index.php'); // Page d'erreur ou redirection appropriée
+    exit();
+}
 
 // Fetch the original task data
 $stmt = $connection->prepare("SELECT name, description, priority, notes FROM tasks WHERE id = ?");
@@ -35,6 +56,11 @@ $priority = $task['priority'];
 $error = $success = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validate CSRF token
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die("Erreur CSRF - Token invalide");
+    }
+
     $title = trim($_POST["title"]);
     $description = trim($_POST["description"]);
     $notes = trim($_POST["notes"]);
@@ -73,59 +99,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!doctype html>
 <html lang="fr">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Gestion des tâches</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/signupRequest.css">
-  </head>
-  <body>
-  <?php include '../navbar.php'; ?>
-    <div class="container page_title">
-  <h1 class="text-center mb-4">Modifier une Tâche</h1>
+</head>
+<body>
+<?php include '../navbar.php'; ?>
+<div class="container page_title">
+    <h1 class="text-center mb-4">Modifier une Tâche</h1>
 </div>
 
 <?php if (!empty($error)): ?>
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Erreur !</strong> <?php echo htmlspecialchars($error); ?>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Erreur !</strong> <?php echo htmlspecialchars($error); ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 <?php endif; ?>
 
 <div style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
-  <form style="width:50%;" method="post">
-    <div class="form-group mb-3">
-      <label for="title" class="form-label">Titre</label>
-      <input type="text" class="form-control" id="title" placeholder="Entrer le titre" name="title" value="<?php echo htmlspecialchars($title); ?>">
-    </div>
+    <form style="width:50%;" method="post">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+        
+        <div class="form-group mb-3">
+            <label for="title" class="form-label">Titre</label>
+            <input type="text" class="form-control" id="title" placeholder="Entrer le titre" name="title" value="<?php echo htmlspecialchars($title); ?>">
+        </div>
 
-    <div class="form-group mb-3">
-      <label for="description" class="form-label">Description</label>
-      <textarea class="form-control" id="description" placeholder="Entrer la description" name="description" rows="3"><?php echo htmlspecialchars($description); ?></textarea>
-    </div>
+        <div class="form-group mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" placeholder="Entrer la description" name="description" rows="3"><?php echo htmlspecialchars($description); ?></textarea>
+        </div>
 
-    <div class="form-group mb-3">
-      <label for="notes" class="form-label">Résultat</label>
-      <textarea class="form-control" id="notes" placeholder="Entrer le résultat" name="notes" rows="3"><?php echo htmlspecialchars($notes); ?></textarea>
-    </div>
+        <div class="form-group mb-3">
+            <label for="notes" class="form-label">Résultat</label>
+            <textarea class="form-control" id="notes" placeholder="Entrer le résultat" name="notes" rows="3"><?php echo htmlspecialchars($notes); ?></textarea>
+        </div>
 
-    <div class="form-group mb-4">
-      <label for="priority" class="form-label">Priorité</label>
-      <select class="form-select" id="priority" name="priority">
-        <option value="primary" <?php if ($priority == "primary") echo 'selected'; ?>>Primaire</option>
-        <option value="secondary" <?php if ($priority == "secondary") echo 'selected'; ?>>Secondaire</option>
-        <option value="third" <?php if ($priority == "third") echo 'selected'; ?>>Tertiaire</option>
-      </select>
-    </div>
+        <div class="form-group mb-4">
+            <label for="priority" class="form-label">Priorité</label>
+            <select class="form-select" id="priority" name="priority">
+                <option value="primary" <?php if ($priority == "primary") echo 'selected'; ?>>Primaire</option>
+                <option value="secondary" <?php if ($priority == "secondary") echo 'selected'; ?>>Secondaire</option>
+                <option value="third" <?php if ($priority == "third") echo 'selected'; ?>>Tertiaire</option>
+            </select>
+        </div>
 
-    <div class="d-flex justify-content-center">
-      <button type="submit" class="btn btn-success m-2" style="font-size: 1.2em;">Modifier</button>
-      <button type="button" class="btn btn-danger m-2" style="font-size: 1.2em;" onclick="window.location.href='../tasks.php'">Annuler</button>
-    </div>
-  </form>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-success m-2" style="font-size: 1.2em;">Modifier</button>
+            <button type="button" class="btn btn-danger m-2" style="font-size: 1.2em;" onclick="window.location.href='../tasks.php'">Annuler</button>
+        </div>
+    </form>
 </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

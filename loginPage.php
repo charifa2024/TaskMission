@@ -1,8 +1,12 @@
 <?php
 // Configurer la session
 ini_set('session.gc_maxlifetime', 3600); // 1 heure de durée de session
-// Démarrer la session
 session_start();
+
+// Générer un token CSRF si ce n'est pas déjà fait
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 // Inclure la connexion à la base de données
 include 'databaseConnect.php';
@@ -19,6 +23,11 @@ $error = "";
 
 // Vérifier si le formulaire a été soumis
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Vérification du token CSRF
+    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die('Erreur CSRF : requête non valide.');
+    }
+
     $email = $_POST['email'];
     $password = $_POST['password'];
 
@@ -59,22 +68,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <!doctype html>
-<html lang="en">
-  <head>
+<html lang="fr">
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login Page</title>
+    <title>Page de Connexion</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/loginPage.css">
-  </head>
-  <body>
+</head>
+<body>
     <div class="logo" onclick="window.location.href ='index.php'">TaskMission</div>
     <div class="login-form">
       <h2>Connexion</h2>
       <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?php echo $error; ?></div>
+        <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
       <?php endif; ?>
       <form method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">Adresse Email</label>
           <input type="email" class="form-control" id="exampleInputEmail1" name="email" required>
@@ -90,5 +100,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+</body>
 </html>
